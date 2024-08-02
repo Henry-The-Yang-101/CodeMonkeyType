@@ -6,43 +6,60 @@ def typing_test(stdscr):
     curses.start_color()
 
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
-    curses.init_pair(2, 244, curses.COLOR_BLACK)
-    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(3, 244, curses.COLOR_BLACK)
 
     stdscr.nodelay(1)
     stdscr.timeout(100)
 
-    target_text = "This is a typing test.\nasdfasdfasdf"
-    current_text = []
+    with open('LeetcodeSolutions/3sum.cpp', 'r') as file:
+        target_text = file.read()
+    typed_text_correctness = []
+
     wpm = 0
     start_time = time.time()
 
-    stdscr.addstr(0, 0, target_text)
-
     while True:
+        typed_text_current_index = len(typed_text_correctness)
         time_elapsed = max(time.time() - start_time, 1)
-        wpm = len(current_text) / (time_elapsed / 60) / 5
+        wpm = len(typed_text_correctness) / (time_elapsed / 60) / 5
 
-        stdscr.addstr(2, 0, f"WPM: {wpm:.2f}")
+        typed_char = stdscr.getch()
 
-        char = stdscr.getch()
-        if char == 27:
+        if typed_char == 27:
             break
-        if char in (curses.KEY_BACKSPACE, 127):
-            if current_text:
-                current_text.pop()
-        elif 0 < char < 256:
-            current_text.append(chr(char))
+        if typed_char in (curses.KEY_BACKSPACE, 127):
+            if typed_text_correctness:
+                typed_text_correctness.pop()
+                typed_text_current_index -= 1
+        elif 0 < typed_char < 256:
+            if typed_char == 13:
+                if target_text[typed_text_current_index] == '\n':
+                    typed_text_correctness.append(True)
+                    typed_text_current_index += 1
+            else:
+                typed_text_correctness.append(target_text[typed_text_current_index] == chr(typed_char))
 
         stdscr.clear()
-        stdscr.addstr()
-        stdscr.addstr(0, 0, target_text)
-        stdscr.addstr(1, 0, "".join(current_text))
-        stdscr.addstr(2, 0, f"WPM: {wpm:.2f}")
+        stdscr.addstr(0, 0, f"3sum.cpp Solution || WPM: {wpm:.2f}")
 
-        if "".join(current_text) == target_text:
-            stdscr.addstr(3, 0, "Test completed!")
+        current_display_char_index = 0
+        current_line = 1
+    
+        for line in target_text.splitlines():
+            for i in range(len(line)):
+                if current_display_char_index >= typed_text_current_index:
+                    stdscr.addch(current_line, i, line[i], curses.color_pair(3))
+                elif typed_text_correctness[current_display_char_index]:
+                    stdscr.addch(current_line, i, line[i], curses.color_pair(1))
+                else:
+                    stdscr.addch(current_line, i, line[i], curses.color_pair(2))
+                current_display_char_index += 1
+            current_display_char_index += 1
+            current_line += 1
+
+        if typed_text_current_index == len(target_text) - 1:
+            stdscr.addstr(current_line + 1, 0, "Test completed!")
             stdscr.refresh()
             stdscr.getch()
             break
