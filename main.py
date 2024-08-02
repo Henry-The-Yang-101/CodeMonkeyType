@@ -17,12 +17,11 @@ def typing_test(stdscr):
     typed_text_correctness = []
 
     wpm = 0
+    accuracy = 0
     start_time = time.time()
 
     while True:
         typed_text_current_index = len(typed_text_correctness)
-        time_elapsed = max(time.time() - start_time, 1)
-        wpm = len(typed_text_correctness) / (time_elapsed / 60) / 5
 
         typed_char = stdscr.getch()
 
@@ -39,9 +38,14 @@ def typing_test(stdscr):
                     typed_text_current_index += 1
             else:
                 typed_text_correctness.append(target_text[typed_text_current_index] == chr(typed_char))
+                typed_text_current_index += 1
 
         stdscr.clear()
-        stdscr.addstr(0, 0, f"3sum.cpp Solution || WPM: {wpm:.2f}")
+
+        time_elapsed = max(time.time() - start_time, 1)
+        wpm = typed_text_current_index / (time_elapsed / 60) / 5
+        accuracy = 0 if typed_text_current_index == 0 else sum(typed_text_correctness) * 100 / typed_text_current_index
+        stdscr.addstr(0, 0, f"3sum.cpp Solution || WPM: {wpm:.2f} || Accuracy: {accuracy:.1f}")
 
         current_display_char_index = 0
         current_line = 1
