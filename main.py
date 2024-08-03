@@ -7,7 +7,8 @@ def typing_test(stdscr):
 
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(3, 244, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_WHITE)
+    curses.init_pair(4, 244, curses.COLOR_BLACK)
 
     stdscr.nodelay(1)
     stdscr.timeout(100)
@@ -52,7 +53,9 @@ def typing_test(stdscr):
     
         for line in target_text.splitlines():
             for i in range(len(line)):
-                if current_display_char_index >= typed_text_current_index:
+                if current_display_char_index > typed_text_current_index:
+                    stdscr.addch(current_line, i, line[i], curses.color_pair(4))
+                elif current_display_char_index == typed_text_current_index:
                     stdscr.addch(current_line, i, line[i], curses.color_pair(3))
                 elif typed_text_correctness[current_display_char_index]:
                     stdscr.addch(current_line, i, line[i], curses.color_pair(1))
