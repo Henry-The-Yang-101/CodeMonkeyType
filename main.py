@@ -40,7 +40,7 @@ def typing_test(stdscr):
                 typed_text_current_index -= 1
         elif 0 < typed_char < 256:
             if target_text[typed_text_current_index] == '\n':
-                if typed_char == 13 or typed_char == 32:
+                if typed_char == 10 or typed_char == 13 or typed_char == 32:
                     typed_text_correctness.append(True)
                     typed_text_current_index += 1
                     while target_text[typed_text_current_index] == '\n' or target_text[typed_text_current_index] == ' ':
