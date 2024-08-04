@@ -21,8 +21,14 @@ def typing_test(stdscr):
     accuracy = 0
     start_time = time.time()
 
+    final_tpm = 0
+    final_accuracy = 0
+
     while True:
         typed_text_current_index = len(typed_text_correctness)
+
+        if typed_text_current_index == 0:
+            start_time = time.time()
 
         typed_char = stdscr.getch()
 
@@ -49,7 +55,7 @@ def typing_test(stdscr):
         time_elapsed = max(time.time() - start_time, 1)
         tpm = typed_text_current_index / (time_elapsed / 60) / 5
         accuracy = 0 if typed_text_current_index == 0 else sum(typed_text_correctness) * 100 / typed_text_current_index
-        stdscr.addstr(0, 0, f"3sum.cpp Solution || Tokens Per Minute (TPM): {tpm:.2f} || Accuracy: {accuracy:.1f}")
+        stdscr.addstr(0, 0, f"3sum.cpp Solution || Tokens Per Minute (TPM): {tpm:.2f} || Accuracy: {accuracy:.1f}%")
 
         current_display_char_index = 0
         current_line = 1
@@ -68,10 +74,13 @@ def typing_test(stdscr):
             current_display_char_index += 1
             current_line += 1
 
-        if typed_text_current_index == len(target_text) - 1:
-            stdscr.addstr(current_line + 1, 0, "Test completed!!!")
-            stdscr.refresh()
+        if typed_text_current_index == len(target_text):
+            final_tpm = tpm
+            final_accuracy = accuracy
+            break
 
         stdscr.refresh()
+
+    stdscr.addstr(0, 0, f"Test completed!!! Your final coding speed was {final_tpm} TPM (tokens per minute) with an accuracy of {final_accuracy}% for the 3sum.cpp solution.")
 
 curses.wrapper(typing_test)
