@@ -1,6 +1,6 @@
-# Typing Test Program
+# CodeMonkeyType
 
-This Python program is a typing test that measures your typing speed and accuracy using LeetCode solutions as the text content. The program runs in the terminal and uses the `curses` library for handling text and colors.
+CodeMonkeyType is a coding speed test program made for code monkeys who wish to level up their code typing skills. This program is written in Python and is designed to run in the terminal. You can use this program to practice upping your coding speed by using real, working solutions for Leetcode problems as the typing content. This is also a great tool to help you  better remember these solutions for your upcoming code interviews!
 
 ## Features
 
